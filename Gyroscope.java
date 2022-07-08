@@ -70,7 +70,7 @@ public class Gyroscope {
             try {
 
                 File path = new File("/storage/emulated/0/Download");
-                File file = new File(path + "/fisier.txt");
+                File file = new File(path + "/gyroscope.csv");
                 FileOutputStream f = new FileOutputStream(file, true);
                 try {
 
@@ -81,7 +81,7 @@ public class Gyroscope {
                         o=false;
                     }
 
-                    if(x!=0.00 && y!=9.81){
+                    if(x!=0.00 && y!=0.00){
                         f.write(entry.getBytes());
                         f.flush();
                     }
