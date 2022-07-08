@@ -40,7 +40,7 @@ public class Gyroscope {
 //        txt_Z=findViewById(R.id.txt_Z);
 //
 //        mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
-//        mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+//        mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
 //
 //    }
 //
