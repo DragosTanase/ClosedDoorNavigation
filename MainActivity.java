@@ -54,7 +54,7 @@ import java.util.Objects;
 
 
 
-public class MainActivity extends AppCompatActivity {
+public class GPS extends AppCompatActivity {
 
     private TextView textViewLatitude ,textViewLongitude;
     private LocationManager locationManager;
@@ -75,10 +75,10 @@ public class MainActivity extends AppCompatActivity {
         textViewLongitude = findViewById(R.id.longitude);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-        if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-            && (ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED))
+        if(ContextCompat.checkSelfPermission(GPS.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            && (ContextCompat.checkSelfPermission(GPS.this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED))
         {
-            ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION},1);
+            ActivityCompat.requestPermissions(GPS.this,new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION},1);
         }
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 1, new LocationListener() {
@@ -108,8 +108,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
     }
-
 
 }
