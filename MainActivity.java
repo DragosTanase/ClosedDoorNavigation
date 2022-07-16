@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
             String once = "latitude" + "," + "longitude";
             String entry = "\n" + String.format("%.6f", x) + "," + String.format("%.3f", y);
             try {
-                //print X Y Z once
+                //print longitude and latitude once
                 if (gps.o == true) {
                     f.write(once.getBytes());
                     f.flush();
