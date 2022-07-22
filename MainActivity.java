@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
         }
 
         
-        MobileData mobileData = new MobileData();
+       
         MobileData.myPhoneStateListener pslistener = mobileData.new myPhoneStateListener();
         mobileData.telephoneManager  = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         mobileData.telephoneManager.listen(pslistener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
