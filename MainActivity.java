@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
 
     }
 
-
+    ///// GPS LATITUDE AND LONGITUDE VALUES
     @Override
     public void onLocationChanged(@NonNull Location location) {
         float latitude = (float)location.getLatitude();
