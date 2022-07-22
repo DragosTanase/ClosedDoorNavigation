@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
         magnetometer.magSensor = magnetometer.magSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         stepCounter.msensorManager =(SensorManager) getSystemService(SENSOR_SERVICE);
         stepCounter.mStepCounter=stepCounter.msensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        
         if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && (ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED))
         {
@@ -74,13 +75,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
             bluetooth.BTAdapter.startDiscovery();
         }
 
+        
         MobileData mobileData = new MobileData();
         MobileData.myPhoneStateListener pslistener = mobileData.new myPhoneStateListener();
         mobileData.telephoneManager  = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         mobileData.telephoneManager.listen(pslistener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
         SignalStrength signalStrength = mobileData.telephoneManager.getSignalStrength();
         pslistener.onSignalStrengthsChanged(signalStrength);
-
 
         registerReceiver(bluetooth.receiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
 
@@ -105,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
                 mainHandler.postDelayed(this, 1000);
             }
         };
+        
         mainHandler.postDelayed(r, 1000);
     }
     protected void onResume() {
