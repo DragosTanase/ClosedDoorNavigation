@@ -1,3 +1,17 @@
+        MobileData.myPhoneStateListener pslistener = mobileData.new myPhoneStateListener();
+        mobileData.telephoneManager  = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+
+        
+        Handler bluHandler = new Handler(Looper.getMainLooper());
+        final Runnable r2 = new Runnable() {
+            @Override
+            public void run() {
+                bluHandler.postDelayed(this, 1000);
+            }
+        };
+        bluHandler.postDelayed(r2, 1000);
+
+
         Button startBtn = findViewById(R.id.startBtn_txt);
 
         startBtn.setOnClickListener(new View.OnClickListener() {
@@ -51,6 +65,7 @@
                             unregisterReceiver(bluetooth.receiver);
                             mobileData.telephoneManager.listen(pslistener,PhoneStateListener.LISTEN_NONE);
                             mainHandler.removeCallbacks(r);
+                            bluHandler.removeCallbacks(r2);
 
                         }
                     }, 5000);
@@ -62,3 +77,5 @@
                 }
             }
         });
+
+    }
