@@ -1,0 +1,64 @@
+        Button startBtn = findViewById(R.id.startBtn_txt);
+
+        startBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ok) {
+                    startBtn.setText("STOP");
+                    ok = false;
+                    accelerometer.mSensorManager.registerListener(accelerometer.sensorEventListener, accelerometer.mAccelerator, SensorManager.SENSOR_DELAY_NORMAL);
+                    stepCounter.msensorManager.registerListener(stepCounter.sensorEventListener, stepCounter.mStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
+                    barometer.sensorManager.registerListener(barometer.sensorEventListener, barometer.pressureSensor, SensorManager.SENSOR_DELAY_NORMAL);
+                    gyroscope.mSensorManager.registerListener(gyroscope.sensorEventListener, gyroscope.mGyroscope, SensorManager.SENSOR_DELAY_NORMAL);
+                    magnetometer.magSensorManager.registerListener(magnetometer.sensorEventListener, magnetometer.magSensor, SensorManager.SENSOR_DELAY_NORMAL);
+                    ////bluetooth start
+                    registerReceiver(bluetooth.receiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
+                    if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                            && (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                    }
+                    //GPS start
+                    gps.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) MainActivity.this);
+
+                    //Mobile Data
+                    mobileData.telephoneManager.listen(pslistener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
+                    SignalStrength signalStrength = mobileData.telephoneManager.getSignalStrength();
+                    pslistener.onSignalStrengthsChanged(signalStrength);
+
+                    //Wifi
+                    Handler mainHandler = new Handler(Looper.getMainLooper());
+                    final Runnable r = new Runnable() {
+                        @Override
+                        public void run() {
+                            wifiSignal.displayWifiData();
+                            mainHandler.postDelayed(this, 1000);
+                        }
+                    };
+                    mainHandler.postDelayed(r, 1000);
+
+                    ////Handler to register only few seconds
+                    Handler stopRecHandler = new Handler(Looper.getMainLooper());
+                    stopRecHandler.postDelayed(new Runnable(){
+
+                        public void run(){
+                            Log.d("handler","handler stop");
+                            accelerometer.mSensorManager.unregisterListener(accelerometer.sensorEventListener, accelerometer.mAccelerator);
+                            stepCounter.msensorManager.unregisterListener(stepCounter.sensorEventListener, stepCounter.mStepCounter);
+                            barometer.sensorManager.unregisterListener(barometer.sensorEventListener, barometer.pressureSensor);
+                            gyroscope.mSensorManager.unregisterListener(gyroscope.sensorEventListener, gyroscope.mGyroscope);
+                            magnetometer.magSensorManager.unregisterListener(magnetometer.sensorEventListener, magnetometer.magSensor);
+                            gps.locationManager.removeUpdates((LocationListener) MainActivity.this);
+                            unregisterReceiver(bluetooth.receiver);
+                            mobileData.telephoneManager.listen(pslistener,PhoneStateListener.LISTEN_NONE);
+                            mainHandler.removeCallbacks(r);
+
+                        }
+                    }, 5000);
+
+
+                } else if(!ok) {
+                    startBtn.setText("START");
+                    ok = true;
+                }
+            }
+        });
