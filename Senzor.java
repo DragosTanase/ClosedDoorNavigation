@@ -13,9 +13,9 @@ public class Senzor {
     Senzor(){};
 
     public void writeCSV(String fileName, String once, String entry) throws FileNotFoundException {
-        File path = new File("/storage/emulated/0/Download");
-        File file = new File(path + fileName);
-        FileOutputStream f = new FileOutputStream(file, true);
+         path = new File("/storage/emulated/0/Download");
+         file = new File(path + fileName);
+         f = new FileOutputStream(file, true);
         try {
 
             if(headerCSV==true){
