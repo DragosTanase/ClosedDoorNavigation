@@ -119,54 +119,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
 
         Button startBtn = findViewById(R.id.startBtn);
 
-//        startBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (ok) {
-//                    startBtn.setText("STOP");
-//                    ok = false;
-//                    accelerometer.mSensorManager.registerListener(accelerometer.sensorEventListener, accelerometer.mAccelerator, SensorManager.SENSOR_DELAY_NORMAL);
-////                    steps.msensorManager.registerListener(steps.sensorEventListener, steps.mStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
-//                    barometer.sensorManager.registerListener(barometer.sensorEventListener, barometer.pressureSensor, SensorManager.SENSOR_DELAY_UI);
-//                    gyroscope.mSensorManager.registerListener(gyroscope.sensorEventListener, gyroscope.mGyroscope, SensorManager.SENSOR_DELAY_NORMAL);
-//                    magnetometer.magSensorManager.registerListener(magnetometer.sensorEventListener, magnetometer.magSensor, SensorManager.SENSOR_DELAY_NORMAL);
-////                    registerReceiver(blu.receiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
-//                    if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-//                            && (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
-//                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-//                    }
-//                    gps.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) MainActivity.this);
-//
-//
-//
-//                    Handler stopRecHandler = new Handler(Looper.getMainLooper());
-//
-//                    stopRecHandler.postDelayed(new Runnable(){
-//                        //save in csv
-//                        public void run(){
-//                            Log.d("handler","handler stop");
-//                            accelerometer.mSensorManager.unregisterListener(accelerometer.sensorEventListener, accelerometer.mAccelerator);
-////                            steps.msensorManager.unregisterListener(steps.sensorEventListener, steps.mStepCounter);
-//                            barometer.sensorManager.unregisterListener(barometer.sensorEventListener, barometer.pressureSensor);
-//                            gyroscope.mSensorManager.unregisterListener(gyroscope.sensorEventListener, gyroscope.mGyroscope);
-//                            magnetometer.magSensorManager.unregisterListener(magnetometer.sensorEventListener, magnetometer.magSensor);
-//                            gps.locationManager.removeUpdates((LocationListener) MainActivity.this);
-////                            unregisterReceiver(blu.receiver);
-//
-//                        }
-//                    }, 5000);
-//
-//
-//
-//                } else {
-//                    //handler save 5 sec csv
-//                    //unregister
-//                    startBtn.setText("START");
-//                    ok = true;
-//                }
-//            }
-//        });
-
             startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -199,15 +151,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
                             mainHandler.postDelayed(this, 1000);
                         }
                     };
-                    
-                    Handler startRecHandler = new Handler(Looper.getMainLooper());
 
-                    startRecHandler.postDelayed(new Runnable(){
-                        //save in csv
-                        public void run(){
-                            Log.d("handler","save data start");
-                        }
-                    }, 1000);
+                  //save start point
 
                 } else if (!ok) {
                     //handler save 5 sec csv
@@ -215,14 +160,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
                     startBtn.setText("START");
                     ok = true;
 
-                    Handler stopRecHandler = new Handler(Looper.getMainLooper());
+                    //save stop point
 
-                    stopRecHandler.postDelayed(new Runnable(){
-                        //save in csv
-                        public void run(){
-                            Log.d("handler","save data stop");
-                        }
-                    }, 1000);
                     accelerometer.mSensorManager.unregisterListener(accelerometer.sensorEventListener, accelerometer.mAccelerator);
 //                    stepCounter.msensorManager.unregisterListener(stepCounter.sensorEventListener, stepCounter.mStepCounter);
                     barometer.sensorManager.unregisterListener(barometer.sensorEventListener, barometer.pressureSensor);
