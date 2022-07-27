@@ -48,8 +48,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
+        
         gps.locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         barometer.sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         barometer.pressureSensor = barometer.sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
@@ -77,8 +76,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
         {
             bluetooth.BTAdapter.startDiscovery();
         }
-
-
+        
         MobileData.myPhoneStateListener pslistener = mobileData.new myPhoneStateListener();
         mobileData.telephoneManager  = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
@@ -93,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
                     ok = false;
 
                     accelerometer.mSensorManager.registerListener(accelerometer.sensorEventListener, accelerometer.mAccelerator, SensorManager.SENSOR_DELAY_NORMAL);
-//                    stepCounter.msensorManager.registerListener(stepCounter.sensorEventListener, stepCounter.mStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
+                    stepCounter.msensorManager.registerListener(stepCounter.sensorEventListener, stepCounter.mStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
                     barometer.sensorManager.registerListener(barometer.sensorEventListener, barometer.pressureSensor, SensorManager.SENSOR_DELAY_UI);
                     gyroscope.mSensorManager.registerListener(gyroscope.sensorEventListener, gyroscope.mGyroscope, SensorManager.SENSOR_DELAY_NORMAL);
                     magnetometer.magSensorManager.registerListener(magnetometer.sensorEventListener, magnetometer.magSensor, SensorManager.SENSOR_DELAY_NORMAL);
@@ -130,24 +128,26 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
                     };
                     mainHandler.postDelayed(r, 1);
 
-
-                    Log.d("handler","save data start");
-                    String startEntry = "data, x_acc, y_acc, z_acc, x_gyro, y_gyro, z_gyro, tesla, rssi_wifi" + "\n" + barometer.pressure + "," + accelerometer.xAccelerometer + "," + accelerometer.yAccelerometer+ "," + accelerometer.zAccelerometer + "," + gyroscope.xGyroscope + "," + gyroscope.yGyroscope + "," + gyroscope.zGyroscope + "," + magnetometer.tesla + "," + wifiSignal.rssi;
-                    try {
-                        senzor.writeCSV("/start.csv", "", startEntry);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
+                    //save in csv start value
+                    Handler startRecHandler = new Handler(Looper.getMainLooper());
+                    startRecHandler.postDelayed(new Runnable(){
+                        public void run(){
+                            Log.d("handler","save data start");
+                            String startEntry = "data_pres, x_acc, y_acc, z_acc, x_gyro, y_gyro, z_gyro, mag_tesla, wifi_rssi, steps" + "\n" + barometer.pressure + "," + accelerometer.xAccelerometer + "," + accelerometer.yAccelerometer + "," + accelerometer.zAccelerometer + "," + gyroscope.xGyroscope + "," + gyroscope.yGyroscope + "," + gyroscope.zGyroscope + "," + magnetometer.tesla + "," + wifiSignal.rssi + "," + stepCounter.stepCount;
+                            try {
+                                senzor.writeCSV("/start.csv", "", startEntry);
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },200);
 
                 } else {
-                    //handler save 5 sec csv
-                    //unregister
                     startBtn.setText("START");
                     ok = true;
-
-
+                    
                     accelerometer.mSensorManager.unregisterListener(accelerometer.sensorEventListener, accelerometer.mAccelerator);
-//                    stepCounter.msensorManager.unregisterListener(stepCounter.sensorEventListener, stepCounter.mStepCounter);
+                    stepCounter.msensorManager.unregisterListener(stepCounter.sensorEventListener, stepCounter.mStepCounter);
                     barometer.sensorManager.unregisterListener(barometer.sensorEventListener, barometer.pressureSensor);
                     gyroscope.mSensorManager.unregisterListener(gyroscope.sensorEventListener, gyroscope.mGyroscope);
                     magnetometer.magSensorManager.unregisterListener(magnetometer.sensorEventListener, magnetometer.magSensor);
@@ -164,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
                         }
                     };
                     mainHandler.postDelayed(r, 1000);
+                    mainHandler.removeCallbacks(r);
 
                     Handler bluHandler = new Handler(Looper.getMainLooper());
                     final Runnable r2 = new Runnable() {
@@ -173,13 +174,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
                         }
                     };
                     bluHandler.postDelayed(r2, 1000);
-
-                    mainHandler.removeCallbacks(r);
                     bluHandler.removeCallbacks(r2);
-
+                    
                     Log.d("handler","save data stop");
-
-                    String stopEntry = "data, x_acc, y_acc, z_acc, x_gyro, y_gyro, z_gyro, tesla, rssi_wifi" + "\n" + barometer.pressure + "," + accelerometer.xAccelerometer + "," + accelerometer.yAccelerometer + "," + accelerometer.zAccelerometer + "," + gyroscope.xGyroscope + "," + gyroscope.yGyroscope + "," + gyroscope.zGyroscope + "," + magnetometer.tesla + "," + wifiSignal.rssi;
+                    String stopEntry = "data_pres, x_acc, y_acc, z_acc, x_gyro, y_gyro, z_gyro, mag_tesla, wifi_rssi, steps" + "\n" + barometer.pressure + "," + accelerometer.xAccelerometer + "," + accelerometer.yAccelerometer + "," + accelerometer.zAccelerometer + "," + gyroscope.xGyroscope + "," + gyroscope.yGyroscope + "," + gyroscope.zGyroscope + "," + magnetometer.tesla + "," + wifiSignal.rssi + "," + stepCounter.stepCount;
                     try {
                         senzor.writeCSV("/stop.csv", "", stopEntry);
                     } catch (FileNotFoundException e) {
@@ -198,8 +196,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
     @Override
     protected void onPause(){
         super.onPause();
-        stepCounter.msensorManager.unregisterListener(stepCounter.sensorEventListener, stepCounter.mStepCounter);
-
     }
 
     ///// GPS LATITUDE AND LONGITUDE VALUES //////////
