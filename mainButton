@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
+
         gps.locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         barometer.sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         barometer.pressureSensor = barometer.sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
@@ -61,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
         magnetometer.magSensor = magnetometer.magSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         stepCounter.msensorManager =(SensorManager) getSystemService(SENSOR_SERVICE);
         stepCounter.mStepCounter=stepCounter.msensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        MobileData.myPhoneStateListener pslistener = mobileData.new myPhoneStateListener();
+        mobileData.telephoneManager  = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
 
         if(ContextCompat.checkSelfPermission(this,
@@ -71,15 +73,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
                 Manifest.permission.MANAGE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){ //ask for permission
             requestPermissions(new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE}, 0);
         }
-
         if (ContextCompat.checkSelfPermission(  MainActivity.this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED)
         {
             bluetooth.BTAdapter.startDiscovery();
         }
-        
-        MobileData.myPhoneStateListener pslistener = mobileData.new myPhoneStateListener();
-        mobileData.telephoneManager  = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
+        Handler mainHandler2 = new Handler(Looper.getMainLooper());
+        final Runnable[] r4 = new Runnable[1];
 
             Button startBtn = findViewById(R.id.startBtn);
 
@@ -95,8 +95,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
                     barometer.sensorManager.registerListener(barometer.sensorEventListener, barometer.pressureSensor, SensorManager.SENSOR_DELAY_UI);
                     gyroscope.mSensorManager.registerListener(gyroscope.sensorEventListener, gyroscope.mGyroscope, SensorManager.SENSOR_DELAY_NORMAL);
                     magnetometer.magSensorManager.registerListener(magnetometer.sensorEventListener, magnetometer.magSensor, SensorManager.SENSOR_DELAY_NORMAL);
-                    registerReceiver(bluetooth.receiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
 
+                    //Bluetooth
+                    registerReceiver(bluetooth.receiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
                     Handler bluHandler = new Handler(Looper.getMainLooper());
                     final Runnable r2 = new Runnable() {
                         @Override
@@ -106,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
                     };
                     bluHandler.postDelayed(r2, 1000);
 
+                    //GPS
                     if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
                             && (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
                         ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 1);
@@ -118,15 +120,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
                     pslistener.onSignalStrengthsChanged(signalStrength);
 
                     //Wifi
-                    Handler mainHandler = new Handler(Looper.getMainLooper());
-                    final Runnable r = new Runnable() {
+                     r4[0] = new Runnable() {
                         @Override
                         public void run() {
                             wifiSignal.displayWifiData();
-                            mainHandler.postDelayed(this, 1000);
+                            mainHandler2.postDelayed(this, 100);
                         }
                     };
-                    mainHandler.postDelayed(r, 1);
+                    mainHandler2.postDelayed(r4[0], 100);
 
                     //save in csv start value
                     Handler startRecHandler = new Handler(Looper.getMainLooper());
@@ -145,27 +146,17 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
                 } else {
                     startBtn.setText("START");
                     ok = true;
-                    
+
                     accelerometer.mSensorManager.unregisterListener(accelerometer.sensorEventListener, accelerometer.mAccelerator);
                     stepCounter.msensorManager.unregisterListener(stepCounter.sensorEventListener, stepCounter.mStepCounter);
                     barometer.sensorManager.unregisterListener(barometer.sensorEventListener, barometer.pressureSensor);
                     gyroscope.mSensorManager.unregisterListener(gyroscope.sensorEventListener, gyroscope.mGyroscope);
                     magnetometer.magSensorManager.unregisterListener(magnetometer.sensorEventListener, magnetometer.magSensor);
                     gps.locationManager.removeUpdates((LocationListener) MainActivity.this);
-                    unregisterReceiver(bluetooth.receiver);
                     mobileData.telephoneManager.listen(pslistener,PhoneStateListener.LISTEN_NONE);
 
-                    Handler mainHandler = new Handler(Looper.getMainLooper());
-                    final Runnable r = new Runnable() {
-                        @Override
-                        public void run() {
-                            wifiSignal.displayWifiData();
-                            mainHandler.postDelayed(this, 1000);
-                        }
-                    };
-                    mainHandler.postDelayed(r, 1000);
-                    mainHandler.removeCallbacks(r);
-
+                    //Bluetooth
+                    unregisterReceiver(bluetooth.receiver);
                     Handler bluHandler = new Handler(Looper.getMainLooper());
                     final Runnable r2 = new Runnable() {
                         @Override
@@ -175,7 +166,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
                     };
                     bluHandler.postDelayed(r2, 1000);
                     bluHandler.removeCallbacks(r2);
-                    
+
+                    //Wifi
+                    mainHandler2.removeCallbacks(r4[0]);
+
                     Log.d("handler","save data stop");
                     String stopEntry = "data_pres, x_acc, y_acc, z_acc, x_gyro, y_gyro, z_gyro, mag_tesla, wifi_rssi, steps" + "\n" + barometer.pressure + "," + accelerometer.xAccelerometer + "," + accelerometer.yAccelerometer + "," + accelerometer.zAccelerometer + "," + gyroscope.xGyroscope + "," + gyroscope.yGyroscope + "," + gyroscope.zGyroscope + "," + magnetometer.tesla + "," + wifiSignal.rssi + "," + stepCounter.stepCount;
                     try {
@@ -187,7 +181,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
             }
         });
     }
-
 
     protected void onResume() {
         super.onResume();
