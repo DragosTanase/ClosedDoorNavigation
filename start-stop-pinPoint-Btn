@@ -42,6 +42,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
     MobileData mobileData = new MobileData();
     GPS gps = new GPS();
     protected boolean ok = true;
+    String startHeader = "x_acc" + "," + "y_acc" + "," + "z_acc" + "," + "x_gyro" + "," + "y_gyro" + "," + "z_gyro" + "," + "mag_tesla" + "," + "wifi_rssi";
+    String stopHeader = "x_acc" + "," + "y_acc" + "," + "z_acc" + "," + "x_gyro" + "," + "y_gyro" + "," + "z_gyro" + "," + "mag_tesla" + "," + "wifi_rssi";
+    String pinPointHeader = "x_acc" + "," + "y_acc" + "," + "z_acc" + "," + "x_gyro" + "," + "y_gyro" + "," + "z_gyro" + "," + "mag_tesla" + "," + "wifi_rssi";
 
 
     @Override
@@ -82,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
         final Runnable[] r4 = new Runnable[1];
 
             Button startBtn = findViewById(R.id.startBtn);
+            Button pinBtn = findViewById(R.id.pinBtn);
 
             startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
 
                     accelerometer.mSensorManager.registerListener(accelerometer.sensorEventListener, accelerometer.mAccelerator, SensorManager.SENSOR_DELAY_NORMAL);
                     stepCounter.msensorManager.registerListener(stepCounter.sensorEventListener, stepCounter.mStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
-                    barometer.sensorManager.registerListener(barometer.sensorEventListener, barometer.pressureSensor, SensorManager.SENSOR_DELAY_UI);
+                    barometer.sensorManager.registerListener(barometer.sensorEventListener, barometer.pressureSensor, SensorManager.SENSOR_DELAY_NORMAL);
                     gyroscope.mSensorManager.registerListener(gyroscope.sensorEventListener, gyroscope.mGyroscope, SensorManager.SENSOR_DELAY_NORMAL);
                     magnetometer.magSensorManager.registerListener(magnetometer.sensorEventListener, magnetometer.magSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
@@ -134,7 +138,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
                     startRecHandler.postDelayed(new Runnable(){
                         public void run(){
                             Log.d("handler","save data start");
-                            String startEntry = "data_pres, x_acc, y_acc, z_acc, x_gyro, y_gyro, z_gyro, mag_tesla, wifi_rssi, steps" + "\n" + barometer.pressure + "," + accelerometer.xAccelerometer + "," + accelerometer.yAccelerometer + "," + accelerometer.zAccelerometer + "," + gyroscope.xGyroscope + "," + gyroscope.yGyroscope + "," + gyroscope.zGyroscope + "," + magnetometer.tesla + "," + wifiSignal.rssi + "," + stepCounter.stepCount;
+                            String startEntry = startHeader + "\n" + accelerometer.xAccelerometer + "," + accelerometer.yAccelerometer + "," + accelerometer.zAccelerometer + "," + gyroscope.xGyroscope + "," + gyroscope.yGyroscope + "," + gyroscope.zGyroscope + "," + magnetometer.tesla + "," + wifiSignal.rssi;
+                            startHeader = "";
                             try {
                                 senzor.writeCSV("/start.csv", "", startEntry);
                             } catch (FileNotFoundException e) {
@@ -171,14 +176,30 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
                     mainHandler2.removeCallbacks(r4[0]);
 
                     Log.d("handler","save data stop");
-                    String stopEntry = "data_pres, x_acc, y_acc, z_acc, x_gyro, y_gyro, z_gyro, mag_tesla, wifi_rssi, steps" + "\n" + barometer.pressure + "," + accelerometer.xAccelerometer + "," + accelerometer.yAccelerometer + "," + accelerometer.zAccelerometer + "," + gyroscope.xGyroscope + "," + gyroscope.yGyroscope + "," + gyroscope.zGyroscope + "," + magnetometer.tesla + "," + wifiSignal.rssi + "," + stepCounter.stepCount;
+                    String stopEntry = stopHeader + "\n" + accelerometer.xAccelerometer + "," + accelerometer.yAccelerometer + "," + accelerometer.zAccelerometer + "," + gyroscope.xGyroscope + "," + gyroscope.yGyroscope + "," + gyroscope.zGyroscope + "," + magnetometer.tesla + "," + wifiSignal.rssi;
                     try {
                         senzor.writeCSV("/stop.csv", "", stopEntry);
+                        stopHeader = "";
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
                 }
             }
+        });
+
+            pinBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                   Log.d("mag", String.format("%.3f", magnetometer.tesla));
+                       String pinEntry = pinPointHeader + "\n" + accelerometer.xAccelerometer + "," + accelerometer.yAccelerometer + "," + accelerometer.zAccelerometer + "," + gyroscope.xGyroscope + "," + gyroscope.yGyroscope + "," + gyroscope.zGyroscope + "," + magnetometer.tesla + "," + wifiSignal.rssi;
+                       try {
+                           senzor.writeCSV("/pinpoint.csv", "", pinEntry);
+                           pinPointHeader = "";
+                       } catch (FileNotFoundException e) {
+                           e.printStackTrace();
+                       }
+            }
+
         });
     }
 
