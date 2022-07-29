@@ -4,209 +4,117 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#394B50"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/txt_X"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:text="TextView"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/txt_Y"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_X" />
-
-    <TextView
-        android:id="@+id/txt_Z"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_Y" />
-
-    <TextView
-        android:id="@+id/textStrength"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="34sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_Z" />
-
-    <TextView
-        android:id="@+id/txtPressure"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textStrength" />
-
-    <TextView
-        android:id="@+id/txt_X_gyroscope"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtPressure" />
-
-    <TextView
-        android:id="@+id/txt_Y_gyroscope"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_X_gyroscope" />
-
-    <TextView
-        android:id="@+id/txt_Z_gyroscope"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_Y_gyroscope" />
-
-    <TextView
-        android:id="@+id/stpCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="17sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_Z_gyroscope" />
-
-    <TextView
-        android:id="@+id/latitude"
-        android:layout_width="61dp"
-        android:layout_height="20dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.48"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/data" />
-
-    <TextView
-        android:id="@+id/longitude"
-        android:layout_width="73dp"
-        android:layout_height="15dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/latitude" />
-
-    <TextView
-        android:id="@+id/data"
-        android:layout_width="66dp"
-        android:layout_height="16dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.486"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/stpCount" />
-
-    <TextView
-        android:id="@+id/tesla_txt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
-        android:layout_marginBottom="43dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtShowCoord"
-        app:layout_constraintVertical_bias="0.12" />
-
-    <TextView
-        android:id="@+id/azimuth_txt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tesla_txt"
-        app:layout_constraintTop_toBottomOf="@+id/txtShowCoord"
-        app:layout_constraintVertical_bias="0.232" />
-
-    <TextView
-        android:id="@+id/pitch_txt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="14dp"
-        android:text="TextView"
+    <Button
+        android:id="@+id/buttonPP"
+        android:layout_width="90dp"
+        android:layout_height="80dp"
+        android:backgroundTint="#2D7DA3"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="76dp"
+        android:text="@string/pin_point"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.217"
-        app:layout_constraintStart_toEndOf="@+id/azimuth_txt"
-        app:layout_constraintTop_toBottomOf="@+id/txtShowCoord"
-        app:layout_constraintVertical_bias="0.296" />
+        app:layout_constraintStart_toEndOf="@+id/buttonCheck" />
 
-    <TextView
-        android:id="@+id/roll_txt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="26dp"
-        android:layout_marginBottom="39dp"
-        android:text="TextView"
+    <Button
+        android:id="@+id/buttonStart"
+        android:layout_width="90dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="76dp"
+        android:backgroundTint="#2D7DA3"
+        android:text="@string/start"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/pitch_txt"
-        app:layout_constraintTop_toBottomOf="@+id/txtShowCoord"
-        app:layout_constraintVertical_bias="0.161" />
-
-    <TextView
-        android:id="@+id/txtShowCoord"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/longitude" />
-
-    <TextView
-        android:id="@+id/textViewBT"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="180dp"
-        android:layout_marginBottom="82dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/buttonCheck"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/startBtn"
-        android:layout_width="116dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="23dp"
-        android:layout_marginEnd="272dp"
-        android:layout_marginBottom="136dp"
-        android:text="START"
+        android:id="@+id/buttonCheck"
+        android:layout_width="110dp"
+        android:layout_height="80dp"
+        android:backgroundTint="#2D7DA3"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="76dp"
+        android:text="@string/check_location"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/buttonPP"
+        app:layout_constraintStart_toEndOf="@+id/buttonStart" />
+
+    <Spinner
+        android:id="@+id/spinnerPP"
+        android:layout_width="338dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="1dp"
+        android:background="#2D7DA3"
+        android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
+
+    <TextView
+        android:id="@+id/textViewSS"
+        android:layout_width="336dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="1dp"
+        android:text="@string/start_stop"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
+
+    <TextView
+        android:id="@+id/textViewPP"
+        android:layout_width="338dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="1dp"
+        android:text="@string/pinpoint"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLOC" />
+
+    <TextView
+        android:id="@+id/textViewLOC"
+        android:layout_width="338dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="1dp"
+        android:text="@string/locatie_curenta"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSS" />
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="338dp"
+        android:layout_height="267dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="2dp"
+        android:background="#2D7DA3"
+        app:layout_constraintBottom_toTopOf="@+id/textViewSS"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerPP">
+
+        <com.example.uisimplu.Canvas
+            android:id="@+id/canvas"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></com.example.uisimplu.Canvas>
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
