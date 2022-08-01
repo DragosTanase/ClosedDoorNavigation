@@ -19,6 +19,7 @@ public abstract class StepSensorBase implements SensorEventListener {
     public interface StepCallBack {
 
         void Step(int stepNum);
+        void StepClick();
     }
 
     public boolean registerStep() {
