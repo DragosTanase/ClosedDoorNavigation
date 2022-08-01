@@ -6,6 +6,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
+import android.view.View;
 
 public class OrientSensor implements SensorEventListener {
     private static final String TAG = "OrientSensor";
@@ -23,6 +24,9 @@ public class OrientSensor implements SensorEventListener {
     public interface OrientCallBack {
 
         void Orient(int orient);
+
+        void OrientClick();
+
     }
 
 
@@ -30,7 +34,6 @@ public class OrientSensor implements SensorEventListener {
         boolean isAvailable = true;
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
 
-        // 注册加速度传感器
         if (sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                 SensorManager.SENSOR_DELAY_GAME)) {
             Log.i(TAG, "accelerometru disponibil！");
@@ -39,7 +42,6 @@ public class OrientSensor implements SensorEventListener {
             isAvailable = false;
         }
 
-        // 注册地磁场传感器
         if (sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
                 SensorManager.SENSOR_DELAY_GAME)) {
             Log.i(TAG, "magnetic filed disponibil！");
