@@ -38,14 +38,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     Bluetooth bluetooth = new Bluetooth();
     StepCounter stepCounter = new StepCounter();
     Senzor senzor = new Senzor();
-    private StepSensorBase mStepSensor;
+    protected StepSensorBase mStepSensor;
 
     MobileData mobileData = new MobileData();
     GPS gps = new GPS();
     protected boolean ok = true;
     private Canvas mCanvas;
     private int mStepLen = 50; // marimea pasului
-    private OrientSensor mOrientSensor;
+    protected OrientSensor mOrientSensor;
 
     @Override
     public void Step(int stepNum) {
@@ -58,6 +58,27 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         mCanvas.autoDrawArrow(orient);
     }
 
+    public void OrientClick(){
+        mOrientSensor = new OrientSensor(this, this);
+        if (!mOrientSensor.registerOrient()) {
+            Toast.makeText(this, "orientu nu e disponibil！", Toast.LENGTH_SHORT).show();
+        }else{
+            Log.i(TAG, "orientu ESTE disponibil");
+        }
+
+    }
+
+    public void StepClick()
+    {
+        mStepSensor = new StepSensorAcceleration(this, this);
+        if (!mStepSensor.registerStep()) {
+            Log.i(TAG, "mSTEPSNESOR NU ESTE disponibil");
+        }else{
+            Log.i(TAG, "mSTEPSNESOR ESTE disponibil");
+        }
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,12 +86,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         mCanvas = (Canvas) findViewById(R.id.step_surfaceView);
 
-        mOrientSensor = new OrientSensor(this, this);
-        if (!mOrientSensor.registerOrient()) {
-            Toast.makeText(this, "orientu nu e disponibil！", Toast.LENGTH_SHORT).show();
-        }else{
-            Log.i(TAG, "orientu ESTE disponibil");
-        }
         gps.locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         barometer.sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         barometer.pressureSensor = barometer.sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
@@ -83,13 +98,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         magnetometer.magSensor = magnetometer.magSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         stepCounter.msensorManager =(SensorManager) getSystemService(SENSOR_SERVICE);
         stepCounter.mStepCounter=stepCounter.msensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-        mStepSensor = new StepSensorAcceleration(this, this);
 
-        if (!mStepSensor.registerStep()) {
-            Log.i(TAG, "mSTEPSNESOR NU ESTE disponibil");
-        }else{
-            Log.i(TAG, "mSTEPSNESOR ESTE disponibil");
-        }
         if(ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_DENIED){ //ask for permission
             requestPermissions(new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, 0);
@@ -102,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         {
             bluetooth.BTAdapter.startDiscovery();
         }
-        MobileData.myPhoneStateListener pslistener = mobileData.new myPhoneStateListener();
+//        MobileData.myPhoneStateListener pslistener = mobileData.new myPhoneStateListener();
 
         Handler mainHandler2 = new Handler(Looper.getMainLooper());
         final Runnable[] r4 = new Runnable[1];
@@ -116,13 +125,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     startBtn.setText("STOP");
                     ok = false;
 
-
+                    OrientClick();
+                    StepClick();
                     accelerometer.mSensorManager.registerListener(accelerometer.sensorEventListener, accelerometer.mAccelerator, SensorManager.SENSOR_DELAY_NORMAL);
                     stepCounter.msensorManager.registerListener(stepCounter.sensorEventListener, stepCounter.mStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
                     barometer.sensorManager.registerListener(barometer.sensorEventListener, barometer.pressureSensor, SensorManager.SENSOR_DELAY_UI);
                     gyroscope.mSensorManager.registerListener(gyroscope.sensorEventListener, gyroscope.mGyroscope, SensorManager.SENSOR_DELAY_NORMAL);
                     magnetometer.magSensorManager.registerListener(magnetometer.sensorEventListener, magnetometer.magSensor, SensorManager.SENSOR_DELAY_NORMAL);
-                    mobileData.telephoneManager  = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+//                    mobileData.telephoneManager  = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
                     //Bluetooth
                     registerReceiver(bluetooth.receiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
@@ -143,9 +153,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     gps.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) MainActivity.this);
 
                     //Mobile Data
-                    mobileData.telephoneManager.listen(pslistener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
-                    SignalStrength signalStrength = mobileData.telephoneManager.getSignalStrength();
-                    pslistener.onSignalStrengthsChanged(signalStrength);
+//                    mobileData.telephoneManager.listen(pslistener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
+//                    SignalStrength signalStrength = mobileData.telephoneManager.getSignalStrength();
+//                    pslistener.onSignalStrengthsChanged(signalStrength);
 
                     //Wifi
                     r4[0] = new Runnable() {
@@ -182,7 +192,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     gyroscope.mSensorManager.unregisterListener(gyroscope.sensorEventListener, gyroscope.mGyroscope);
                     magnetometer.magSensorManager.unregisterListener(magnetometer.sensorEventListener, magnetometer.magSensor);
                     gps.locationManager.removeUpdates((LocationListener) MainActivity.this);
-                    mobileData.telephoneManager.listen(pslistener,PhoneStateListener.LISTEN_NONE);
+                    mOrientSensor.unregisterOrient();
+                    mStepSensor.unregisterStep();
+//                    mobileData.telephoneManager.listen(pslistener,PhoneStateListener.LISTEN_NONE);
 
                     //Bluetooth
                     unregisterReceiver(bluetooth.receiver);
