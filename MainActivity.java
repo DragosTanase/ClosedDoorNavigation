@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         setContentView(R.layout.activity_main);
 
         mCanvas = (Canvas) findViewById(R.id.step_surfaceView);
-        Senzor.getInstance().printAllSensor(this);
+
         mOrientSensor = new OrientSensor(this, this);
         if (!mOrientSensor.registerOrient()) {
             Toast.makeText(this, "orientu nu e disponibil！", Toast.LENGTH_SHORT).show();
@@ -90,11 +90,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         }else{
             Log.i(TAG, "mSTEPSNESOR ESTE disponibil");
         }
-
-        MobileData.myPhoneStateListener pslistener = mobileData.new myPhoneStateListener();
-        mobileData.telephoneManager  = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-
-
         if(ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_DENIED){ //ask for permission
             requestPermissions(new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, 0);
@@ -107,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         {
             bluetooth.BTAdapter.startDiscovery();
         }
+        MobileData.myPhoneStateListener pslistener = mobileData.new myPhoneStateListener();
 
         Handler mainHandler2 = new Handler(Looper.getMainLooper());
         final Runnable[] r4 = new Runnable[1];
@@ -126,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     barometer.sensorManager.registerListener(barometer.sensorEventListener, barometer.pressureSensor, SensorManager.SENSOR_DELAY_UI);
                     gyroscope.mSensorManager.registerListener(gyroscope.sensorEventListener, gyroscope.mGyroscope, SensorManager.SENSOR_DELAY_NORMAL);
                     magnetometer.magSensorManager.registerListener(magnetometer.sensorEventListener, magnetometer.magSensor, SensorManager.SENSOR_DELAY_NORMAL);
+                    mobileData.telephoneManager  = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
                     //Bluetooth
                     registerReceiver(bluetooth.receiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
@@ -165,9 +162,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     startRecHandler.postDelayed(new Runnable(){
                         public void run(){
                             Log.d("handler","save data start");
-                            String startEntry = "data_pres, x_acc, y_acc, z_acc, x_gyro, y_gyro, z_gyro, mag_tesla, wifi_rssi, steps" + "\n" + barometer.pressure + "," + accelerometer.xAccelerometer + "," + accelerometer.yAccelerometer + "," + accelerometer.zAccelerometer + "," + gyroscope.xGyroscope + "," + gyroscope.yGyroscope + "," + gyroscope.zGyroscope + "," + magnetometer.tesla + "," + wifiSignal.rssi + "," + stepCounter.stepCount;
+                            String startHeader= "data_pres, x_acc, y_acc, z_acc, x_gyro, y_gyro, z_gyro, mag_tesla, wifi_rssi, steps" + "\n";
+                            String startEntry =  barometer.pressure + "," + accelerometer.xAccelerometer + "," + accelerometer.yAccelerometer + "," + accelerometer.zAccelerometer + "," + gyroscope.xGyroscope + "," + gyroscope.yGyroscope + "," + gyroscope.zGyroscope + "," + magnetometer.tesla + "," + wifiSignal.rssi + "," + stepCounter.stepCount+"\n";
                             try {
-                                senzor.writeCSV("/start.csv", "", startEntry);
+                                senzor.writeCSV("/start.csv", startHeader, startEntry);
                             } catch (FileNotFoundException e) {
                                 e.printStackTrace();
                             }
@@ -202,9 +200,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     mainHandler2.removeCallbacks(r4[0]);
 
                     Log.d("handler","save data stop");
-                    String stopEntry = "data_pres, x_acc, y_acc, z_acc, x_gyro, y_gyro, z_gyro, mag_tesla, wifi_rssi, steps" + "\n" + barometer.pressure + "," + accelerometer.xAccelerometer + "," + accelerometer.yAccelerometer + "," + accelerometer.zAccelerometer + "," + gyroscope.xGyroscope + "," + gyroscope.yGyroscope + "," + gyroscope.zGyroscope + "," + magnetometer.tesla + "," + wifiSignal.rssi + "," + stepCounter.stepCount;
+                    String stopHeader="data_pres, x_acc, y_acc, z_acc, x_gyro, y_gyro, z_gyro, mag_tesla, wifi_rssi, steps" + "\n";
+                    String stopEntry = barometer.pressure + "," + accelerometer.xAccelerometer + "," + accelerometer.yAccelerometer + "," + accelerometer.zAccelerometer + "," + gyroscope.xGyroscope + "," + gyroscope.yGyroscope + "," + gyroscope.zGyroscope + "," + magnetometer.tesla + "," + wifiSignal.rssi + "," + stepCounter.stepCount+"\n";
                     try {
-                        senzor.writeCSV("/stop.csv", "", stopEntry);
+                        senzor.writeCSV("/stop.csv", stopHeader, stopEntry);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
