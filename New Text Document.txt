@@ -1,0 +1,48 @@
+//citire din fisier pt spinner
+
+    private Spinner spinner;
+
+    ArrayList<String> list = new ArrayList<>();
+
+    File f1 = new File("/storage/emulated/0/Download/PinPoints.csv");
+    List<String> lista;
+
+    {
+        try {
+            lista = Files.readAllLines(f1.toPath(), StandardCharsets.UTF_8);
+            for(String l: lista){
+                String [] array=l.split(",",-1);
+                if(array[array.length-1].equals("denumire")) {
+                    continue;
+                }else {
+                    list.add(array[array.length - 1]);
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    //////////////////////////////////////////////////////////////////////////////////////
+ //SPINNER PP
+
+        spinner=findViewById(R.id.spinnerPP);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, list);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(MainActivity.this,spinner.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+
+            }
+        });
