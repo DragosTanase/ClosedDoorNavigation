@@ -18,15 +18,23 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.telephony.PhoneStateListener;
-import android.telephony.SignalStrength;
-import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
-
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity implements LocationListener, OrientSensor.OrientCallBack, StepSensorBase.StepCallBack{
     private static final String TAG = "DA";
@@ -39,23 +47,28 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     StepCounter stepCounter = new StepCounter();
     Senzor senzor = new Senzor();
     protected StepSensorBase mStepSensor;
+    private Spinner spinner;
+
 
     MobileData mobileData = new MobileData();
     GPS gps = new GPS();
     protected boolean ok = true;
     private Canvas mCanvas;
-    private int mStepLen = 50; // marimea pasului
+    private int mStepLen = 40; // marimea pasului
     protected OrientSensor mOrientSensor;
+
+    public MainActivity() throws FileNotFoundException {
+    }
 
     @Override
     public void Step(int stepNum) {
-
         mCanvas.autoAddPoint(mStepLen);
     }
 
     @Override
-    public void Orient(int orient) {
-        mCanvas.autoDrawArrow(orient);
+    public float Orient(double orient) {
+        mCanvas.autoDrawArrow((int)orient);
+        return 0;
     }
 
     public void OrientClick(){
@@ -77,15 +90,38 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             Log.i(TAG, "mSTEPSNESOR ESTE disponibil");
         }
     }
-
+    protected void spinnerList()
+    {
+        ArrayList<String> list= new ArrayList<>();
+        File f1 = new File("/storage/emulated/0/Download/PinPoints.csv");
+        List<String> lista;
+        try {
+            lista = Files.readAllLines(f1.toPath(), StandardCharsets.UTF_8);
+            for(String l: lista){
+                String [] array=l.split(",",-1);
+                if(array[array.length-1].equals("denumire"))
+                {
+                    continue;
+                }else
+                {
+                    list.add(array[array.length - 1]);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //SPINNER PP
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, list);
+        spinner.setAdapter(adapter);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mCanvas = (Canvas) findViewById(R.id.step_surfaceView);
-
+        spinner=findViewById(R.id.spinnerPP);
+        mCanvas =  findViewById(R.id.step_surfaceView);
         gps.locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         barometer.sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         barometer.pressureSensor = barometer.sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
@@ -115,9 +151,42 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         Handler mainHandler2 = new Handler(Looper.getMainLooper());
         final Runnable[] r4 = new Runnable[1];
+        //////////////////////////////////////////////////////////////////////////////////////
+        //citire din fisier pt spinner
+        spinnerList();
+        spinner.setOnTouchListener(spinnerOnTouch);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+        //PIN POINT
+        Button buttonPP;
+        buttonPP =  findViewById(R.id.buttonPP);
+        buttonPP.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                String pinEntry ="\n"+accelerometer.xAccelerometer + "," + accelerometer.yAccelerometer + "," + accelerometer.zAccelerometer + "," + gyroscope.xGyroscope + "," + gyroscope.yGyroscope + "," + gyroscope.zGyroscope + "," + magnetometer.tesla + "," + wifiSignal.rssi+",";
+                openDialog(pinEntry);
+            }
+            public void openDialog(String pinEntry) {
+                PopUpWindow exampleDialog = new PopUpWindow();
+                exampleDialog.show(getSupportFragmentManager(), "example dialog");
+                Log.wtf("Pop-UP:" ,exampleDialog.getEntry());
+                exampleDialog.setData(pinEntry);
 
+            }
+        });
+        //////////////////////////////////////////////////////////////////////////////////////
+
+
+        //START
         Button startBtn = findViewById(R.id.buttonStart);
-
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,9 +221,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     }
                     gps.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) MainActivity.this);
 
-                    //Mobile Data
+//                    //Mobile Data
 //                    mobileData.telephoneManager.listen(pslistener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
-//                    SignalStrength signalStrength = mobileData.telephoneManager.getSignalStrength();
+//                    SignalStrength signalStrength = mobile+Data.telephoneManager.getSignalStrength();
 //                    pslistener.onSignalStrengthsChanged(signalStrength);
 
                     //Wifi
@@ -222,12 +291,22 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                 }
             }
         });
-    }
 
+    }
+    private View.OnTouchListener spinnerOnTouch = new View.OnTouchListener()
+    {
+        public boolean onTouch(View v, MotionEvent event) {
+            if (event.getAction() == MotionEvent.ACTION_UP)
+            {
+                spinnerList();
+            }
+            return false;
+        }
+    };
+   @Override
     protected void onResume() {
         super.onResume();
     }
-
     @Override
     protected void onPause(){
         super.onPause();
