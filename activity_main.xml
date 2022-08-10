@@ -60,67 +60,31 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
 
-    <TextView
-        android:id="@+id/textViewSS"
-        android:layout_width="336dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="1dp"
-        android:text="Start/Stop: "
-        android:textColor="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
-
-    <TextView
-        android:id="@+id/textViewPP"
-        android:layout_width="338dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginEnd="1dp"
-        android:text="PinPoint:"
-        android:textColor="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewLOC" />
-
-    <TextView
-        android:id="@+id/textViewLOC"
-        android:layout_width="338dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginEnd="1dp"
-        android:text="Locatie Curenta:"
-        android:textColor="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewSS" />
-
     <FrameLayout
         android:id="@+id/frameLayout"
-        android:layout_width="338dp"
-        android:layout_height="267dp"
+        android:layout_width="359dp"
+        android:layout_height="379dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
         android:layout_marginStart="1dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="1dp"
-        android:layout_marginBottom="2dp"
         android:background="#2D7DA3"
-        app:layout_constraintBottom_toTopOf="@+id/textViewSS"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinnerPP"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" >
+        app:layout_constraintVertical_bias="0.13">
 
         <com.example.uisimplu.Canvas
             android:id="@+id/step_surfaceView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
+            android:layout_width="2472dp"
+            android:layout_height="2188dp"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true" />
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center"
+            android:background="@color/white" />
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
