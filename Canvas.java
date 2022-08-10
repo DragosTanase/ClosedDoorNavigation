@@ -1,4 +1,4 @@
-package com.example.aplicatieactuala;
+package com.example.uisimplu;
 //import the libraries related to graphics
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -82,7 +82,7 @@ public class Canvas extends View {
             canvas.drawCircle(p.x, p.y, cR, mPaint);//drawing
         }
         for(PointF p : ppPoints){
-            canvas.drawCircle(p.x, p.y, cR, mPP);
+            canvas.drawCircle(p.x, p.y, 15, mPP);
         }
         setCanvas(canvas);
         canvas.save();
@@ -100,10 +100,10 @@ public class Canvas extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-       mCurX = event.getX();
-       mCurY = event.getY();
-       invalidate();
-       return true;
+        mCurX = event.getX();
+        mCurY = event.getY();
+        invalidate();
+        return true;
     }
 
 
