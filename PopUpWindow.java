@@ -16,8 +16,10 @@ import java.io.FileOutputStream;
 public class PopUpWindow extends AppCompatDialogFragment{
 
     private EditText editText;
+    protected Canvas mCanvas;
     protected String entry;
     protected String data;
+    protected boolean state_save=false;
     String once ="x_acc" + "," + "y_acc" + "," + "z_acc" + "," + "x_gyro" + "," + "y_gyro" + "," + "z_gyro" + "," + "mag_tesla" + "," + "wifi_rssi"+","+"denumire";
 
 
@@ -39,6 +41,8 @@ public class PopUpWindow extends AppCompatDialogFragment{
             public void onClick(DialogInterface dialogInterface, int i) {
                 entry = editText.getText().toString();
                 storePP(true,once);
+                mCanvas.adPP();
+
             }
         });
         editText = view.findViewById(R.id.edit_locatie);
@@ -72,14 +76,18 @@ public class PopUpWindow extends AppCompatDialogFragment{
                 e.printStackTrace();
             }
         }
-        else if (state == false)
-        {
-
-        }
     }
     public String getEntry()
     {
         return entry;
+    }
+
+    public boolean isState() {
+        return state_save;
+    }
+
+    public void setmCanvas(Canvas mCanvas) {
+        this.mCanvas = mCanvas;
     }
 
     public void setData(String data) {
