@@ -1,4 +1,4 @@
-package com.example.uisimplu;
+package com.example.aplicatieactuala;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,9 +48,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     Senzor senzor = new Senzor();
     protected StepSensorBase mStepSensor;
     private Spinner spinner;
-    float xDown =0;
-    float yDown =0;
-
+    protected Button buttonPP;
 
     MobileData mobileData = new MobileData();
     GPS gps = new GPS();
@@ -76,9 +74,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     public void OrientClick(){
         mOrientSensor = new OrientSensor(this, this);
         if (!mOrientSensor.registerOrient()) {
-            Toast.makeText(this, "orientu nu e disponibil！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "orientul nu e disponibil！", Toast.LENGTH_SHORT).show();
         }else{
-            Log.i(TAG, "orientu ESTE disponibil");
+            Log.i(TAG, "orientul ESTE disponibil");
         }
 
     }
@@ -92,6 +90,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             Log.i(TAG, "mSTEPSNESOR ESTE disponibil");
         }
     }
+
+
     protected void spinnerList()
     {
         ArrayList<String> list= new ArrayList<>();
@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         //SPINNER PP
         ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, list);
         spinner.setAdapter(adapter);
@@ -153,8 +154,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         Handler mainHandler2 = new Handler(Looper.getMainLooper());
         final Runnable[] r4 = new Runnable[1];
-        //////////////////////////////////////////////////////////////////////////////////////
-        //citire din fisier pt spinner
+
         spinnerList();
         spinner.setOnTouchListener(spinnerOnTouch);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -165,8 +165,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
+
         //PIN POINT
-        Button buttonPP;
+
         buttonPP =  findViewById(R.id.buttonPP);
         buttonPP.setOnClickListener(new View.OnClickListener()
         {
@@ -175,19 +176,17 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             {
                 String pinEntry ="\n"+accelerometer.xAccelerometer + "," + accelerometer.yAccelerometer + "," + accelerometer.zAccelerometer + "," + gyroscope.xGyroscope + "," + gyroscope.yGyroscope + "," + gyroscope.zGyroscope + "," + magnetometer.tesla + "," + wifiSignal.rssi+",";
                 openDialog(pinEntry);
+                mCanvas.adPP();
             }
             public void openDialog(String pinEntry) {
                 PopUpWindow exampleDialog = new PopUpWindow();
                 exampleDialog.show(getSupportFragmentManager(), "example dialog");
                 Log.wtf("Pop-UP:" ,exampleDialog.getEntry());
                 exampleDialog.setData(pinEntry);
-
+                mCanvas.adPP();
             }
         });
-        //////////////////////////////////////////////////////////////////////////////////////
 
-
-        //START
         Button startBtn = findViewById(R.id.buttonStart);
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -293,45 +292,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                 }
             }
         });
-        
-        
-        mCanvas.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-
-
-            public boolean onTouch(View view, MotionEvent event) {
-                switch (event.getActionMasked()){
-
-                    // the user put his finger down on image
-                    case MotionEvent.ACTION_DOWN:
-                        xDown = event.getX();
-                        yDown = event.getY();
-                        break;
-
-                    //the user move his finger
-                    case MotionEvent.ACTION_MOVE:
-                        float movedX, movedY;
-                        movedX = event.getX();
-                        movedY = event.getY();
-
-                        //calculate how much the user moved his finger
-                        float distanceX = movedX - xDown;
-                        float distanceY = movedY - yDown;
-
-                        //move the view to that position
-                        mCanvas.setX(mCanvas.getX() + distanceX);
-                        mCanvas.setY(mCanvas.getY() + distanceY);
-
-//                        //for next move event
-//                        xDown = movedX;
-//                        yDown = movedY;
-                        break;
-                }
-                return true;
-            }
-        });
 
     }
+
     private View.OnTouchListener spinnerOnTouch = new View.OnTouchListener()
     {
         public boolean onTouch(View v, MotionEvent event) {
@@ -342,7 +305,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             return false;
         }
     };
-   @Override
+
+    @Override
     protected void onResume() {
         super.onResume();
     }
