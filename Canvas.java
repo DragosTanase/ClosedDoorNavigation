@@ -1,4 +1,4 @@
-package com.example.uisimplu;
+package com.example.aplicatieactuala;
 //import the libraries related to graphics
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -23,7 +23,7 @@ public class Canvas extends View {
     private Paint mPaint;
     private Paint mStrokePaint;
     private Path mArrowPath;
-
+    private Paint mPP;
     //numerical attributes related to shapes dimensions
     private int cR = 10; //circle radius
     private int arrowR = 20; //arrow range
@@ -32,9 +32,9 @@ public class Canvas extends View {
     private int mOrient;
     //a list designed for storing the points objects
     private List<PointF> mPointList = new ArrayList<>();
+    protected android.graphics.Canvas canvas;
+    private List<PointF> ppPoints = new ArrayList<>();
 
-
-    private Paint background;
 
     //create constructors for Canvas class
     public Canvas(Context context) {
@@ -63,6 +63,12 @@ public class Canvas extends View {
         mArrowPath.close();
 
 
+        mPP = new Paint();
+        mPP.setColor(Color.RED);
+        mPP.setAntiAlias(true);
+        mPP.setStyle(Paint.Style.FILL);
+
+
     }
 
 
@@ -75,6 +81,10 @@ public class Canvas extends View {
         for (PointF p : mPointList) {
             canvas.drawCircle(p.x, p.y, cR, mPaint);//drawing
         }
+        for(PointF p : ppPoints){
+            canvas.drawCircle(p.x, p.y, cR, mPP);
+        }
+        setCanvas(canvas);
         canvas.save();
         canvas.translate(mCurX, mCurY);
         canvas.rotate(mOrient);
@@ -82,16 +92,18 @@ public class Canvas extends View {
         canvas.drawArc(new RectF(-arrowR * 0.8f, -arrowR * 0.8f, arrowR * 0.8f, arrowR * 0.8f),
                 0, 360, false, mStrokePaint);
         canvas.restore();
+
+
     }
 
-    //overridden method onTouchEvent which want to know if the canvas is touched based on motion event
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-//        mCurX = event.getX();
-//        mCurY = event.getY();
-//        invalidate();
-      return true;
+       mCurX = event.getX();
+       mCurY = event.getY();
+       invalidate();
+       return true;
     }
 
 
@@ -99,6 +111,16 @@ public class Canvas extends View {
         mCurX += (float) (stepLen * Math.sin(Math.toRadians(mOrient)));
         mCurY += -(float) (stepLen * Math.cos(Math.toRadians(mOrient)));
         mPointList.add(new PointF(mCurX, mCurY));
+
+        invalidate();
+    }
+
+
+    public void adPP(){
+
+        ppPoints.add(new PointF(mCurX, mCurY));
+        canvas.save();
+        canvas.restore();
         invalidate();
     }
 
@@ -106,6 +128,13 @@ public class Canvas extends View {
     public void autoDrawArrow(int orient) {
         mOrient = orient;
         invalidate();
+    }
+    public void setCanvas(android.graphics.Canvas canvas) {
+        this.canvas = canvas;
+    }
+
+    public android.graphics.Canvas getCanvas() {
+        return canvas;
     }
 
 }
