@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     Senzor senzor = new Senzor();
     protected StepSensorBase mStepSensor;
     private Spinner spinner;
+    float xDown =0;
+    float yDown =0;
 
 
     MobileData mobileData = new MobileData();
@@ -289,6 +291,43 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                         e.printStackTrace();
                     }
                 }
+            }
+        });
+        
+        
+        mCanvas.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+
+
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getActionMasked()){
+
+                    // the user put his finger down on image
+                    case MotionEvent.ACTION_DOWN:
+                        xDown = event.getX();
+                        yDown = event.getY();
+                        break;
+
+                    //the user move his finger
+                    case MotionEvent.ACTION_MOVE:
+                        float movedX, movedY;
+                        movedX = event.getX();
+                        movedY = event.getY();
+
+                        //calculate how much the user moved his finger
+                        float distanceX = movedX - xDown;
+                        float distanceY = movedY - yDown;
+
+                        //move the view to that position
+                        mCanvas.setX(mCanvas.getX() + distanceX);
+                        mCanvas.setY(mCanvas.getY() + distanceY);
+
+//                        //for next move event
+//                        xDown = movedX;
+//                        yDown = movedY;
+                        break;
+                }
+                return true;
             }
         });
 
