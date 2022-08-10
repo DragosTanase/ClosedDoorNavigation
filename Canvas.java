@@ -1,5 +1,23 @@
 package com.example.uisimplu;
-{
+//import the libraries related to graphics
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PointF;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.view.View;
+
+import java.util.ArrayList;
+import java.util.List;
+
+//create the Canvas class which extends the base class View(defined in Android Studio)
+public class Canvas extends View {
 
     //paint and path attributes related to graphics
     private Paint mPaint;
