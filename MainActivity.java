@@ -293,11 +293,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     }
                 }
             }
-        });
-
-    }
-    
-        mCanvas.setOnTouchListener(new View.OnTouchListener() {
+        });        mCanvas.setOnTouchListener(new View.OnTouchListener() {
             @SuppressLint("ClickableViewAccessibility")
             @Override
 
@@ -333,6 +329,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                 return true;
             }
         });
+
+    }
+    
+
 
 
     private View.OnTouchListener spinnerOnTouch = new View.OnTouchListener()
