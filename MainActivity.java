@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     private Canvas mCanvas;
     private int mStepLen = 40; // marimea pasului
     protected OrientSensor mOrientSensor;
+        float xDown =0;
+    float yDown =0;
 
     public MainActivity() throws FileNotFoundException {
     }
@@ -294,6 +296,44 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         });
 
     }
+    
+        mCanvas.setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("ClickableViewAccessibility")
+            @Override
+
+
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getActionMasked()){
+
+                    // the user put his finger down on image
+                    case MotionEvent.ACTION_DOWN:
+                        xDown = event.getX();
+                        yDown = event.getY();
+                        break;
+
+                    //the user move his finger
+                    case MotionEvent.ACTION_MOVE:
+                        float movedX, movedY;
+                        movedX = event.getX();
+                        movedY = event.getY();
+
+                        //calculate how much the user moved his finger
+                        float distanceX = movedX - xDown;
+                        float distanceY = movedY - yDown;
+
+                        //move the view to that position
+                        mCanvas.setX(mCanvas.getX() + distanceX);
+                        mCanvas.setY(mCanvas.getY() + distanceY);
+
+//                        //for next move event
+//                        xDown = movedX;
+//                        yDown = movedY;
+                        break;
+                }
+                return true;
+            }
+        });
+
 
     private View.OnTouchListener spinnerOnTouch = new View.OnTouchListener()
     {
