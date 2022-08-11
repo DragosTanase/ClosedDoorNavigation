@@ -1,4 +1,4 @@
-package com.example.uisimplu;
+package com.example.aplicatieactuala;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -16,10 +16,9 @@ import java.io.FileOutputStream;
 public class PopUpWindow extends AppCompatDialogFragment{
 
     private EditText editText;
-    protected Canvas mCanvas;
     protected String entry;
     protected String data;
-    protected boolean state_save=false;
+    protected Canvas mCanvas;
     String once ="x_acc" + "," + "y_acc" + "," + "z_acc" + "," + "x_gyro" + "," + "y_gyro" + "," + "z_gyro" + "," + "mag_tesla" + "," + "wifi_rssi"+","+"denumire";
 
 
@@ -27,6 +26,7 @@ public class PopUpWindow extends AppCompatDialogFragment{
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.layout_dialog,null);
+
         builder.setView(view).setTitle("Save").setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i)
@@ -34,6 +34,7 @@ public class PopUpWindow extends AppCompatDialogFragment{
                 entry="";
                 storePP(false,once);
                 dialogInterface.dismiss();
+
             }
         }).setPositiveButton("Save", new DialogInterface.OnClickListener()
         {
@@ -42,7 +43,6 @@ public class PopUpWindow extends AppCompatDialogFragment{
                 entry = editText.getText().toString();
                 storePP(true,once);
                 mCanvas.adPP();
-
             }
         });
         editText = view.findViewById(R.id.edit_locatie);
@@ -51,7 +51,7 @@ public class PopUpWindow extends AppCompatDialogFragment{
     public void storePP(boolean state, String once)
     {
         if(state) {
-           String  entry=data+getEntry();
+            String  entry=data+getEntry();
             try {
                 File path = new File("/storage/emulated/0/Download");
                 File file = new File(path + "/PinPoints.csv");
@@ -76,22 +76,18 @@ public class PopUpWindow extends AppCompatDialogFragment{
                 e.printStackTrace();
             }
         }
+
     }
     public String getEntry()
     {
         return entry;
     }
 
-    public boolean isState() {
-        return state_save;
+    public void setData(String data) {
+        this.data = data;
     }
 
     public void setmCanvas(Canvas mCanvas) {
         this.mCanvas = mCanvas;
     }
-
-    public void setData(String data) {
-        this.data = data;
-    }
 }
-
