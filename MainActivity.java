@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.IntentFilter;
@@ -49,16 +50,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     protected StepSensorBase mStepSensor;
     private Spinner spinner;
     protected Button buttonPP;
-
+    int widthCanvas = 0;
     MobileData mobileData = new MobileData();
     GPS gps = new GPS();
     protected boolean ok = true;
-    private Canvas mCanvas;
+    protected Canvas mCanvas;
     private int mStepLen = 40; // marimea pasului
     protected OrientSensor mOrientSensor;
-        float xDown =0;
-    float yDown =0;
-
+    float xDown=0; float yDown=0;
     public MainActivity() throws FileNotFoundException {
     }
 
@@ -178,14 +177,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             {
                 String pinEntry ="\n"+accelerometer.xAccelerometer + "," + accelerometer.yAccelerometer + "," + accelerometer.zAccelerometer + "," + gyroscope.xGyroscope + "," + gyroscope.yGyroscope + "," + gyroscope.zGyroscope + "," + magnetometer.tesla + "," + wifiSignal.rssi+",";
                 openDialog(pinEntry);
-                mCanvas.adPP();
+
             }
             public void openDialog(String pinEntry) {
                 PopUpWindow exampleDialog = new PopUpWindow();
                 exampleDialog.show(getSupportFragmentManager(), "example dialog");
                 Log.wtf("Pop-UP:" ,exampleDialog.getEntry());
                 exampleDialog.setData(pinEntry);
-                mCanvas.adPP();
+                exampleDialog.setmCanvas(mCanvas);
             }
         });
 
@@ -293,7 +292,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     }
                 }
             }
-        });        mCanvas.setOnTouchListener(new View.OnTouchListener() {
+
+
+
+
+
+        });
+
+        mCanvas.setOnTouchListener(new View.OnTouchListener() {
             @SuppressLint("ClickableViewAccessibility")
             @Override
 
@@ -331,12 +337,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         });
 
     }
-    
+
 
 
 
     private View.OnTouchListener spinnerOnTouch = new View.OnTouchListener()
     {
+
         public boolean onTouch(View v, MotionEvent event) {
             if (event.getAction() == MotionEvent.ACTION_UP)
             {
@@ -345,6 +352,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             return false;
         }
     };
+
+
 
     @Override
     protected void onResume() {
