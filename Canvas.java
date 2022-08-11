@@ -1,17 +1,15 @@
-package com.example.uisimplu;
+package com.example.aplicatieactuala;
 //import the libraries related to graphics
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,15 +25,18 @@ public class Canvas extends View {
     //numerical attributes related to shapes dimensions
     private int cR = 10; //circle radius
     private int arrowR = 20; //arrow range
-    private float mCurX = 3300;//x side length of rectangle
-    private float mCurY = 3100;//y side length of rectangle
+    private float mCurX = 500;//x side length of rectangle
+    private float mCurY = 500;//y side length of rectangle
     private int mOrient;
     //a list designed for storing the points objects
     private List<PointF> mPointList = new ArrayList<>();
     protected android.graphics.Canvas canvas;
     private List<PointF> ppPoints = new ArrayList<>();
-
-
+    private View resizeMap;
+    private int width;
+    private int height;
+    private int top;
+    private int left;
     //create constructors for Canvas class
     public Canvas(Context context) {
         this(context, null);
@@ -48,6 +49,7 @@ public class Canvas extends View {
     public Canvas(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);//inherited constructor parameters
 
+        resizeMap = findViewById(R.id.step_surfaceView);
         mPaint = new Paint();//paint object
         mPaint.setColor(Color.BLUE);//paint colour
         mPaint.setAntiAlias(true);
@@ -69,6 +71,8 @@ public class Canvas extends View {
         mPP.setStyle(Paint.Style.FILL);
 
 
+
+
     }
 
 
@@ -82,7 +86,7 @@ public class Canvas extends View {
             canvas.drawCircle(p.x, p.y, cR, mPaint);//drawing
         }
         for(PointF p : ppPoints){
-            canvas.drawCircle(p.x, p.y, 15, mPP);
+            canvas.drawCircle(p.x, p.y, cR, mPP);
         }
         setCanvas(canvas);
         canvas.save();
@@ -94,16 +98,20 @@ public class Canvas extends View {
         canvas.restore();
 
 
+
+    resizeMap.invalidate();
+
     }
 
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        mCurX = event.getX();
-        mCurY = event.getY();
-        invalidate();
-        return true;
+      // mCurX = event.getX();
+      // mCurY = event.getY();
+
+       invalidate();
+       return true;
     }
 
 
@@ -113,14 +121,19 @@ public class Canvas extends View {
         mPointList.add(new PointF(mCurX, mCurY));
 
         invalidate();
+
     }
 
 
     public void adPP(){
+        width+=800;
+        height+=800;
+        top-=800;
 
         ppPoints.add(new PointF(mCurX, mCurY));
         canvas.save();
         canvas.restore();
+        resizeMap.layout(0,0,width,height);
         invalidate();
     }
 
