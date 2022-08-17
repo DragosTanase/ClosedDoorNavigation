@@ -8,4 +8,6 @@ import java.io.FileNotFoundException;
 public class GPS extends Senzor{
     protected LocationManager locationManager;
     protected Location location;
+    protected int latitude;
+    protected int longitude;
 }
