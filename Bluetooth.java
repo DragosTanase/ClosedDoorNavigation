@@ -12,7 +12,9 @@ import java.io.FileNotFoundException;
 public class Bluetooth extends Senzor {
     protected BluetoothAdapter BTAdapter = BluetoothAdapter.getDefaultAdapter();
     protected BluetoothManager bluetoothManager;
-    protected    int rssi;
+    protected int rssi;
+    protected String address;
+
     protected final BroadcastReceiver receiver = new BroadcastReceiver() {
 
         @Override
@@ -21,7 +23,7 @@ public class Bluetooth extends Senzor {
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE);
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-
+                address = device.getAddress();
 
                 String entry = "\n"+ device.getAddress() + ", " + String.format("%d", rssi);
 
