@@ -155,6 +155,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
         Handler mainHandler2 = new Handler(Looper.getMainLooper());
         final Runnable[] r4 = new Runnable[1];
+        
+        
+        Handler routeHandler = new Handler(Looper.getMainLooper());
+        final Runnable[] r5 = new Runnable[1];
 
         spinnerList();
         spinner.setOnTouchListener(spinnerOnTouch);
