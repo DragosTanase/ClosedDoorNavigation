@@ -264,13 +264,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                         public void run() {
                            routeHandler.postDelayed(this,1000);
                             //route file writing data
-                            String onceRoute  = "\n"+ "accelerometer X," + " accelerometer Y, "+ "accelerometer Z, " +
-                                    "gyroscope X, " + "gyroscope Y, " + "gyroscope Z, " +
+                            String onceRoute  = "\n"+ "accelerometer_X," + " accelerometer_Y, "+ "accelerometer_Z, " +
+                                    "gyroscope_X, " + "gyroscope_Y, " + "gyroscope_Z, " +
                                     "pressure, " +
-                                    "magnetometer azimuth, " + "magnetometer pitch, " + "magnetometer roll, " + "magnetometer tesla, " +
-                                    "Bluetooth address, "+ "Bluetooth Rssi, " +
-                                    "GPS latitude, "+ "GPS longitude, " +
-                                    "Wifi rssi, " +
+                                    "magnetometer_azimuth, " + "magnetometer_pitch, " + "magnetometer_roll, " + "magnetometer_tesla, " +
+                                    "Bluetooth_address, "+ "Bluetooth_Rssi, " +
+                                    "GPS_latitude, "+ "GPS_longitude, " +
+                                    "Wifi_rssi, " +
                                     "steps";
 
                             String routeEntry = "\n" + accelerometer.xAccelerometer + "," +
