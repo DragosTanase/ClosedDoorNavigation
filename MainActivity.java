@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         });
 
         Button startBtn = findViewById(R.id.buttonStart);
-        startBtn.setOnClickListener(new View.OnClickListener() {
+             startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (ok) {
@@ -253,6 +253,63 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                         }
                     },200);
 
+
+
+                    r5[0] = new Runnable() {
+                        @Override
+                        public void run() {
+                           routeHandler.postDelayed(this,1000);
+                            //route file writing data
+                            String onceRoute  = "\n"+ "accelerometer X," + " accelerometer Y, "+ "accelerometer Z, " +
+                                    "gyroscope X, " + "gyroscope Y, " + "gyroscope Z, " +
+                                    "pressure, " +
+                                    "magnetometer azimuth, " + "magnetometer pitch, " + "magnetometer roll, " + "magnetometer tesla, " +
+                                    "Bluetooth address, "+ "Bluetooth Rssi, " +
+                                    "GPS latitude, "+ "GPS longitude, " +
+                                    "Wifi rssi, " +
+                                    "steps";
+
+                            String routeEntry = "\n" + accelerometer.xAccelerometer + "," +
+                                    accelerometer.yAccelerometer + "," +
+                                    accelerometer.zAccelerometer + "," +
+
+                                    gyroscope.xGyroscope + "," +
+                                    gyroscope.yGyroscope + "," +
+                                    gyroscope.zGyroscope + "," +
+
+                                    barometer.pressure + "," +
+
+                                    magnetometer.azimuth + "," +
+                                    magnetometer.pitch + "," +
+                                    magnetometer.roll + "," +
+                                    magnetometer.tesla + "," +
+
+                                    bluetooth.address + "," +
+                                    bluetooth.rssi + "," +
+
+                                    gps.latitude + "," +
+                                    gps.longitude + "," +
+
+                                    wifiSignal.rssi + "," +
+
+                                    stepCounter.stepCount;
+
+                            try {
+
+                                senzor.writeCSV("/Route.csv",onceRoute,routeEntry);
+                            }
+
+                            catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                           routeHandler.postDelayed(this, 1000);
+                        }
+                    };
+                    routeHandler.postDelayed(r5[0], 1000);
+
+
+
+
                 } else {
                     startBtn.setText("START");
                     ok = true;
@@ -290,13 +347,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
+
+                    //handler to stop writing in the route file
+                    routeHandler.removeCallbacks(r5[0]);
                 }
             }
-
-
-
-
-
+            
         });
 
         mCanvas.setOnTouchListener(new View.OnTouchListener() {
