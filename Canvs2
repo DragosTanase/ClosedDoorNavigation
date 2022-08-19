@@ -1,113 +1,202 @@
-package com.example.uisimplu;
-
+package com.example.aplicatieactuala;
+//import the libraries related to graphics
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
+import android.nfc.Tag;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Canvas extends View
-{
-    private Paint mPaintPP;
+//create the Canvas class which extends the base class View(defined in Android Studio)
+public class Canvas extends View {
+
+    //paint and path attributes related to graphics
     private Paint mPaint;
     private Paint mStrokePaint;
     private Path mArrowPath;
-    protected android.graphics.Canvas canvas;
-    private int cR = 5; //circle radius
-    private int arrowR = 10; //arrow range
-    private float mCurX = 100;
-    private float mCurY = 600;
+    private Paint mPP;
+    //numerical attributes related to shapes dimensions
+    private int cR = 10; //circle radius
+    private int arrowR = 20; //arrow range
+    private float mCurX = 200;//x side length of rectangle
+    private float mCurY = 200;//y side length of rectangle
+    private float mCurX2 = 200;
+    protected ViewGroup.LayoutParams params;
+   protected FrameLayout frLayout;
+    String TAG = "MARIM";
+    protected  View resize;
+    protected boolean move=false;
+    protected int adiacentRight = 300;
+    protected int adiacentDown = 500;
+    protected int adiacentUp = 300;
+    protected int adiacentLeft = 600;
+
 
     private int mOrient;
-
+    //a list designed for storing the points objects
     private List<PointF> mPointList = new ArrayList<>();
-    private List<PointF> mPointPP = new ArrayList<>();
-    public Canvas(Context context)
-    {
+    protected android.graphics.Canvas canvas;
+
+    private List<PointF> ppPoints = new ArrayList<>();
+
+
+
+
+    //create constructors for Canvas class
+    public Canvas(Context context) {
         this(context, null);
-    }
-    public Canvas(Context context, AttributeSet attrs)
-    {
-        this(context, attrs, 0);
+
     }
 
-    public Canvas(Context context, AttributeSet attrs, int defStyleAttr)
-    {
-        super(context, attrs, defStyleAttr);
-        mPaint = new Paint();
-        mPaint.setColor(Color.BLUE);
+    public Canvas(Context context, AttributeSet attrs) {
+
+        this(context, attrs, 0);
+
+    }
+
+    public Canvas(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);//inherited constructor parameters
+
+        mPaint = new Paint();//paint object
+        mPaint.setColor(Color.GREEN);//paint colour
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.FILL);
+        frLayout = findViewById(R.id.frLayout);
+
+
 
         mStrokePaint = new Paint(mPaint);
         mStrokePaint.setStyle(Paint.Style.STROKE);
         mStrokePaint.setStrokeWidth(5);
 
-        mPaintPP = new Paint();
-        mPaintPP.setColor(Color.RED);
-        mPaintPP.setAntiAlias(true);
-        mPaintPP.setStyle(Paint.Style.FILL);
-
         mArrowPath = new Path();
         mArrowPath.arcTo(new RectF(-arrowR, -arrowR, arrowR, arrowR), 0, -180);
         mArrowPath.lineTo(0, -3 * arrowR);
         mArrowPath.close();
-    }
-    @Override
-    protected void onDraw(android.graphics.Canvas canvas)
-    {
 
-        for (PointF p : mPointList)
-        {
-            canvas.drawCircle(p.x, p.y, cR, mPaint);
+
+        mPP = new Paint();
+        mPP.setColor(Color.RED);
+        mPP.setAntiAlias(true);
+        mPP.setStyle(Paint.Style.FILL);
+
+        invalidate();
+    }
+
+
+    //overridden method onDraw dedicated for drawing in canvas area
+    @Override
+    protected void onDraw(android.graphics.Canvas canvas) {
+
+
+        params = frLayout.getLayoutParams();
+
+        for (PointF p : mPointList) {
+            canvas.drawCircle(p.x, p.y, cR, mPaint); //drawing
+        }
+        for(PointF p : ppPoints){
+            canvas.drawCircle(p.x, p.y, cR, mPP);
+
         }
         setCanvas(canvas);
 
+
+
+
         canvas.save();
-        canvas.translate(mCurX, mCurY);
+
+        canvas.translate(mCurX,mCurY);
+
         canvas.rotate(mOrient);
-        canvas.drawPath(mArrowPath, mPaint);
-        canvas.drawArc(new RectF(-arrowR * 0.8f, -arrowR * 0.8f, arrowR * 0.8f, arrowR * 0.8f), 0, 360, false, mStrokePaint);
+        canvas.drawPath(mArrowPath,mPaint);
+
+        canvas.drawArc(new RectF(-arrowR * 0.8f, -arrowR * 0.8f, arrowR * 0.8f, arrowR * 0.8f),
+                0, 360, true, mStrokePaint);
+
         canvas.restore();
+        mCurX2 = mCurX;
+         Log.d(TAG, String.valueOf(params.width + ", " + mCurX2 + ", " + Math.abs(mCurX) + ", " + -mCurX+ ", " + mCurY));
 
-    }
-
-    public void drawPP()
-    {
-
-        mPointPP.add(new PointF(mCurX, mCurY));
-        for (PointF p : mPointPP)
+        if(Math.abs(mCurX)+(adiacentRight)>=params.width)
         {
-            canvas.drawCircle(p.x, p.y, 15, mPaintPP);
+            params.width+=600;
+
+            adiacentRight+=300;
+            frLayout.setLayoutParams(params);
         }
 
-        canvas.save();
+        if(Math.abs(-mCurX2)+adiacentLeft+300>=params.width){
+            params.width+=600;
+
+            adiacentLeft+=300;
+            frLayout.setLayoutParams(params);
+        }
+
+        if(mCurY+adiacentDown>=params.height){
+            params.height+=600;
+            frLayout.setLayoutParams(params);
+            adiacentDown+=300;
+        }
+
+
+
+        if((Math.abs(-mCurY))+adiacentUp+600>=params.height){
+            params.height+=600;
+            frLayout.setLayoutParams(params);
+            adiacentUp+=300;
+        }
+
+
+
+        invalidate();
 
     }
+
     @Override
-    public boolean onTouchEvent(MotionEvent event)
-    {
-        mCurX = event.getX();
-        mCurY = event.getY();
-        invalidate();
-        return true;
+    public boolean onTouchEvent(MotionEvent event) {
+
+      // mCurX = event.getX();
+      // mCurY = event.getY();
+
+
+       invalidate();
+       return true;
     }
-    public void autoAddPoint(float stepLen)
-    {
+
+
+    public void autoAddPoint(float stepLen) {
         mCurX += (float) (stepLen * Math.sin(Math.toRadians(mOrient)));
         mCurY += -(float) (stepLen * Math.cos(Math.toRadians(mOrient)));
         mPointList.add(new PointF(mCurX, mCurY));
 
         invalidate();
+
     }
-    public void autoDrawArrow(int orient)
-    {
+
+
+    public void adPP(){
+
+        ppPoints.add(new PointF(mCurX, mCurY));
+        canvas.save();
+        canvas.restore();
+
+    }
+
+    //method designed for drawing starting from orient position
+    public void autoDrawArrow(int orient) {
         mOrient = orient;
         invalidate();
     }
@@ -119,4 +208,13 @@ public class Canvas extends View
     public android.graphics.Canvas getCanvas() {
         return canvas;
     }
+
+    public void setParams(ViewGroup.LayoutParams params) {
+        this.params = params;
+    }
+
+    public void setFrLayout(FrameLayout frLayout) {
+        this.frLayout = frLayout;
+    }
+
 }
